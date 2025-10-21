@@ -205,7 +205,7 @@
     "//ts_proto:workspace_deps.bzl%config_repository": {
       "general": {
         "bzlTransitiveDigest": "O4gIwBIsaBxSotLKi/OkVha4+y0tTWP3NbbdjPkJgCY=",
-        "usagesDigest": "g5fHvYlBvwMtczyu+dCdTB2plfMvDkN8hQtYZA/tC+g=",
+        "usagesDigest": "ofWrfuRmLd8t1l1Vi2x6fUusVBWi6QjBdp9iHv3+0/0=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -466,7 +466,7 @@
     "@@aspect_rules_js~//npm:extensions.bzl%npm": {
       "general": {
         "bzlTransitiveDigest": "o0x0UWtyFc2Z+sO7cnPtjm55owoyuEM2O/zvDvlnbOA=",
-        "usagesDigest": "RkAM6FQR5nY1tcypKVk9Bxf7VBW4MK08qHS8p8sdniY=",
+        "usagesDigest": "aZUKBFGceba0bm+lxRICJL6TNorKexMW5p0r6fiEfrA=",
         "recordedFileInputs": {
           "@@//pnpm-lock.yaml": "2cf0577fcf9140ffe95c7de56ffdf071e497a9c48694e8939048376be646db9d"
         },
