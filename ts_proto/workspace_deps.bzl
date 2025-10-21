@@ -56,7 +56,7 @@ _config_repository = repository_rule(
     _config_repository_impl,
     attrs = {
         "rules_ts_proto_repo_only_for_internal_use": attr.string(
-            default = "@com_github_gonzojive_rules_ts_proto",
+            default = "@rules_ts_proto",
         ),
         "bzl_contents": attr.string(
             doc = "Contents of the ts_proto_library_config.bzl file to generate.",
@@ -91,3 +91,22 @@ def install_rules_ts_proto(dep_targets = None):
         name = "com_github_gonzojive_rules_ts_proto_config",
         bzl_contents = _config_bzl_contents(dep_targets),
     )
+
+
+_config = tag_class(attrs= {
+    "name": attr.string(),
+    "dep_targets": attr.string_dict(),
+})
+def _config_repository_impl2(ctx):
+    for mod in ctx.modules:
+        for c in mod.tags.config:
+            print("creating ", c.name)
+            _config_repository(
+                name = c.name,
+                bzl_contents = _config_bzl_contents(c.dep_targets),
+            )
+
+config_repository = module_extension(
+  implementation = _config_repository_impl2,
+  tag_classes = {"config": _config},
+)

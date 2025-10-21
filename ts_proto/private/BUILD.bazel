@@ -6,6 +6,7 @@ bzl_library(
     srcs = ["ts_proto_library.bzl"],
     visibility = ["//ts_proto:__subpackages__"],
     deps = [
+        ":bazel_tools_http",
         ":filtered_files",
         ":utils",
         "@aspect_bazel_lib//lib:base64",
@@ -30,4 +31,15 @@ bzl_library(
     name = "utils",
     srcs = ["utils.bzl"],
     visibility = ["//ts_proto:__subpackages__"],
+)
+
+bzl_library(
+    name = "bazel_tools_http",
+    srcs = [
+        "@bazel_tools//tools/build_defs/repo:cache.bzl",
+        "@bazel_tools//tools/build_defs/repo:http.bzl",
+        "@bazel_tools//tools/build_defs/repo:utils.bzl",
+        "@host_platform//:constraints.bzl",
+        "@platforms//host:constraints.bzl",
+    ],
 )
