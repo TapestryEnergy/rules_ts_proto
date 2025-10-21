@@ -167,7 +167,7 @@ _ts_proto_library_protoc_plugin_compile = rule(
         ),
     ),
     toolchains = [
-        str(Label("@rules_proto_grpc//protobuf:toolchain_type")),
+        str(Label("@protobuf//bazel/private:proto_toolchain_type")),
     ],
 )
 
