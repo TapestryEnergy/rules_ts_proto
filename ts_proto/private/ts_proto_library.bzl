@@ -2,7 +2,9 @@
 
 load("@aspect_bazel_lib//lib:base64.bzl", "base64")
 load("@aspect_rules_js//js:libs.bzl", "js_library_lib")
+load("@aspect_rules_swc//swc:defs.bzl", "swc")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@bazel_skylib//lib:partial.bzl", "partial")
 
 #load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@bazel_skylib//lib:paths.bzl", "paths")
@@ -10,8 +12,8 @@ load("@com_github_gonzojive_rules_ts_proto_config//:ts_proto_library_config.bzl"
 load(
     "@rules_proto_grpc//:defs.bzl",
     "ProtoPluginInfo",
+    "proto_compile",
     "proto_compile_attrs",
-    "proto_compile_impl",
 )
 load(":filtered_files.bzl", "filtered_files")
 load(":utils.bzl", "relative_path")
@@ -72,7 +74,11 @@ def _ts_proto_library_protoc_plugin_compile_impl(ctx):
     }
 
     # Execute with extracted attrs
-    usual_providers = proto_compile_impl(ctx, options_override = options)
+    extra_protoc_args = getattr(ctx.attr, "extra_protoc_args", [])
+    extra_protoc_files = ctx.files.extra_protoc_files
+
+    # Execute with extracted attrs
+    usual_providers = proto_compile(ctx, options, extra_protoc_args, extra_protoc_files)
 
     # Go through the declared outputs to extract a GeneratedCodeInfo.
     #default_info = [x for x in usual_providers if typeof]
@@ -167,7 +173,7 @@ _ts_proto_library_protoc_plugin_compile = rule(
         ),
     ),
     toolchains = [
-        str(Label("@protobuf//bazel/private:proto_toolchain_type")),
+        str(Label("@rules_proto//proto:toolchain_type")),
     ],
 )
 
@@ -370,6 +376,7 @@ def ts_proto_library(
         source_map = source_map,
         declaration = declaration,
         declaration_map = declaration_map,
+        transpiler = partial.make(swc, swcrc = Label("//:.swcrc")),
     )
 
     _ts_proto_library_rule(

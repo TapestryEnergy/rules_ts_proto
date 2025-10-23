@@ -12,6 +12,7 @@ bzl_library(
         "@aspect_bazel_lib//lib:base64",
         "@aspect_rules_js//js:defs",
         "@aspect_rules_js//js:libs",
+        "@aspect_rules_swc//swc:defs",
         "@aspect_rules_ts//ts:defs",
         "@bazel_skylib//lib:paths",
         "@com_github_gonzojive_rules_ts_proto_config//:ts_proto_library_config",
@@ -36,6 +37,7 @@ bzl_library(
 bzl_library(
     name = "bazel_tools_http",
     srcs = [
+        "@@platforms~host_platform~host_platform//:constraints.bzl",
         "@bazel_tools//tools/build_defs/repo:cache.bzl",
         "@bazel_tools//tools/build_defs/repo:http.bzl",
         "@bazel_tools//tools/build_defs/repo:utils.bzl",

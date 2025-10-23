@@ -1,9 +1,5 @@
 "A function to call in WORKSPACE files for projects that use rules_ts_proto."
 
-# Based on
-# https://github.com/aspect-build/rules_js/blob/main/docs/faq.md#can-i-use-bazel-managed-pnpm
-load("@aspect_rules_js//npm:npm_import.bzl", "npm_translate_lock", "pnpm_repository")
-
 _REQUIRED_NPM_PACKAGE_NAMES = [
     "grpc-web",
     "google-protobuf",
@@ -65,38 +61,11 @@ _config_repository = repository_rule(
     },
 )
 
-def install_rules_ts_proto(dep_targets = None):
-    """Installs rules_ts_proto dependencies in the workspace after rules_ts_proto_dependencies.
-
-    Args:
-        dep_targets: A dictionary from NPM package name to a target that supplies that
-            dependency. Required keys in the dictionary are "google-protobuf",
-            "@types/google-protobuf". A typical value for this attribute is {
-                "google-protobuf": "//:node_modules/google-protobuf",
-                "@types/google-protobuf": "//:node_modules/@types/google-protobuf",
-            }
-    """
-    if type(dep_targets) != "dict":
-        fail("dep_targets attribute must be a dictionary, got {}".format(type(dep_targets)))
-
-    pnpm_repository(name = "pnpm")
-
-    npm_translate_lock(
-        name = "rules_ts_proto_npm",
-        pnpm_lock = "@com_github_gonzojive_rules_ts_proto//:pnpm-lock.yaml",
-        verify_node_modules_ignored = "@com_github_gonzojive_rules_ts_proto//:.bazelignore",
-    )
-
-    _config_repository(
-        name = "com_github_gonzojive_rules_ts_proto_config",
-        bzl_contents = _config_bzl_contents(dep_targets),
-    )
-
-
-_config = tag_class(attrs= {
+_config = tag_class(attrs = {
     "name": attr.string(),
     "dep_targets": attr.string_dict(),
 })
+
 def _config_repository_impl2(ctx):
     for mod in ctx.modules:
         for c in mod.tags.config:
@@ -107,6 +76,6 @@ def _config_repository_impl2(ctx):
             )
 
 config_repository = module_extension(
-  implementation = _config_repository_impl2,
-  tag_classes = {"config": _config},
+    implementation = _config_repository_impl2,
+    tag_classes = {"config": _config},
 )

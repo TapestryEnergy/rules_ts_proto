@@ -22,5 +22,4 @@ bzl_library(
     name = "workspace_deps",
     srcs = ["workspace_deps.bzl"],
     visibility = ["//visibility:public"],
-    deps = ["@aspect_rules_js//npm:npm_import"],
 )

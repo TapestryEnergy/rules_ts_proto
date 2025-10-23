@@ -9,4 +9,5 @@ jasmine_test(
         "package.json",
         "//:extending_ts_proto",
     ],
+    node_modules = "//:node_modules",
 )

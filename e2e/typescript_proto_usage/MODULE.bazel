@@ -1,0 +1,53 @@
+###############################################################################
+# Bazel now uses Bzlmod by default to manage external dependencies.
+# Please consider migrating your external dependencies from WORKSPACE to MODULE.bazel.
+#
+# For more details, please check https://github.com/bazelbuild/bazel/issues/18958
+###############################################################################
+
+bazel_dep(name = "rules_ts_proto")
+local_path_override(
+    module_name = "rules_ts_proto",
+    path = "../..",
+)
+
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
+bazel_dep(name = "grpc-web")
+git_override(
+    module_name = "grpc-web",
+    commit = "d0ecc7635b5e148bbc85ac2d345b1783d700249e",  # v2.0.0
+    remote = "https://github.com/grpc/grpc-web.git",
+)
+
+bazel_dep(name = "aspect_rules_swc", version = "2.5.0")
+bazel_dep(name = "googleapis", version = "0.0.0-20251003-2193a2bf")
+bazel_dep(name = "protobuf", version = "29.0")
+bazel_dep(name = "aspect_rules_jasmine", version = "2.0.0")
+bazel_dep(name = "rules_proto", version = "6.0.2")
+bazel_dep(name = "aspect_rules_js", version = "2.0.0")
+bazel_dep(name = "gazelle", version = "0.36.0", repo_name = "bazel_gazelle")
+bazel_dep(name = "aspect_bazel_lib", version = "2.7.7")
+bazel_dep(name = "rules_nodejs", version = "6.2.0")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node", dev_dependency = True)
+node.toolchain(node_version = "18.12.1")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+npm.npm_translate_lock(
+    name = "example_npm",
+    data = [
+        "//:package.json",
+    ],
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+use_repo(npm, "example_npm")
+
+bazel_dep(name = "aspect_rules_esbuild", version = "0.22.1")
+bazel_dep(name = "aspect_rules_ts", version = "3.1.0")
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
+rules_ts_ext.deps(
+    ts_version_from = "//:package.json",
+)
+use_repo(rules_ts_ext, "npm_typescript")
